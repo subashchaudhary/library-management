@@ -1,4 +1,4 @@
-package com.hubit.librarymangement.service;
+package dev.subashcodes.librarymangement.service;
 
 import org.springframework.stereotype.Component;
 
