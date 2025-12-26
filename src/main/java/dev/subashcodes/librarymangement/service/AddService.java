@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class AddService {
 
 
+    //addition method
     public int addNum(int a, int b){
         return a  + b;
     }
