@@ -1,5 +1,6 @@
 package dev.subashcodes.librarymangement;
 
+import dev.subashcodes.librarymangement.model.Author;
 import dev.subashcodes.librarymangement.service.AddService;
 import dev.subashcodes.librarymangement.util.BookAvailabilityUtil;
 import dev.subashcodes.librarymangement.util.DateTimeFormatter;
@@ -24,6 +25,8 @@ public class LibrarymangementApplication {
         AddService addService = (AddService) applicationContext.getBean("addService");
         int result = addService.addNum(4, 23);
         System.out.println("Sum = :" + result);
+
+    //    Author a = new Author("test", "test", "test");
 
 	}
 //http://localhost:8080/

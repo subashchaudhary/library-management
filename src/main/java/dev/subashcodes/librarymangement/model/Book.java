@@ -1,5 +1,8 @@
 package dev.subashcodes.librarymangement.model;
 
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Book {
     public Book(String bookName, String authorName, String publication) {
         this.bookName = bookName;
