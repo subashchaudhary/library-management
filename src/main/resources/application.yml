@@ -1,0 +1,11 @@
+
+server:
+  port: 8080
+
+mydb:
+  username: admin
+  password: secret
+  admin:
+    username: superadmin
+    password: supersecret
+

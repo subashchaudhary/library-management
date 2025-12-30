@@ -36,7 +36,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public String sinup(@RequestBody SingupRequest singupRequest){
-
+        System.out.println("Signup Request Received for username: " + singupRequest.getUsername());
         boolean isTrue = authService.signup(singupRequest);
         return isTrue ? "signup successful" : "signup failed";
     }

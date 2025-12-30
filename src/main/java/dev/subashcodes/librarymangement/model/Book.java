@@ -1,33 +1,51 @@
 package dev.subashcodes.librarymangement.model;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
+import java.util.UUID;
 
 @Document
 public class Book {
-    public Book(String bookName, String authorName, String publication) {
-        this.bookName = bookName;
-        this.authorName = authorName;
-        this.publication = publication;
+    @MongoId
+    private String bookId = UUID.randomUUID().toString();
+
+    private String title;
+    private String author;
+    private String category;
+    private String publication;
+    private boolean isAvailable;
+
+    public String getId() {
+        return bookId;
     }
 
-    public String bookName;
-    public String authorName;
-    public String publication;
-
-    public String getBookName() {
-        return bookName;
+    public void setId(String id) {
+        this.bookId = id;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
+    public String getTitle() {
+        return title;
     }
 
-    public String getAuthorName() {
-        return authorName;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setAuthorName(String authorName) {
-        this.authorName = authorName;
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getPublication() {
@@ -36,5 +54,13 @@ public class Book {
 
     public void setPublication(String publication) {
         this.publication = publication;
+    }
+
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
     }
 }
