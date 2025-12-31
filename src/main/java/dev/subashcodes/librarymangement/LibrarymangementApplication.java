@@ -1,11 +1,8 @@
 package dev.subashcodes.librarymangement;
 
-import dev.subashcodes.librarymangement.service.AddService;
-import dev.subashcodes.librarymangement.util.BookAvailabilityUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 

@@ -30,6 +30,8 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
+
+        <!-- Spring Web MVC for web API -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
@@ -58,7 +60,7 @@
 <!--        </dependency>-->
 
 
-        <!-- MongoDB Dependencies -->
+        <!-- MongoDB Dependencies for Mongo DB-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>

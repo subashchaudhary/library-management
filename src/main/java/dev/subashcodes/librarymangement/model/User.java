@@ -1,13 +1,14 @@
 package dev.subashcodes.librarymangement.model;
 
 
+import dev.subashcodes.librarymangement.constants.AppConstants;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 //@Data
-@Document
+@Document(AppConstants.USER_COLLECTION)
 public class User {
 
     //primary key

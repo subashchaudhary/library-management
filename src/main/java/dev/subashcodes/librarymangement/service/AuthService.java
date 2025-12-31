@@ -15,27 +15,34 @@ public class AuthService {
 
     public boolean login(String username, String password){
 
-
+        //validate the request
+        if(username == null || password == null){
+            return false;
+        }
+       User user = userRepository.findByUsernameAndPassword(username, password);
+        if(user == null){
+            return false;
+        }
         return true;
     }
 
 
     public boolean signup(SingupRequest singupRequest){
 
-        //validate the request
-
-
         String email = singupRequest.getEmail();
         String password = singupRequest.getPassword();
         String username = singupRequest.getUsername();
         String phone = singupRequest.getPhone();
 
+        //Entity mapping
         User user = new User();
         user.setEmail(email);
         user.setPassword(password);
         user.setPhone(phone);
         user.setUsername(username);
 
+        //this will save the user to the database if saved it will return the saved user object else if not saved
+        //it will return null
         User savedUser = userRepository.save(user);
         if(savedUser == null){
             return false;
