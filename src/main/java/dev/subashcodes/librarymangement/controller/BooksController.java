@@ -27,6 +27,13 @@ public class BooksController {
         return bookService.getBookById(bookId);
     }
 
+
+    /**
+     * This endpoint is used to add a new book record to the db
+     *
+     * @param book
+     * @return
+     */
     @PostMapping("/books/add")
     public String addNewBook(@RequestBody Book book) {
         try {

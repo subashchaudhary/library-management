@@ -22,7 +22,21 @@ public class BookService {
     public Book addBook(Book book) throws LibraryMgmtException {
 
        book.setAvailable(true);
+
+       //chek if the book with the same title and author already exist
+        String author = book.getAuthor();
+        String title = book.getTitle();
+        Optional<Book> bookOptional = bookRepository.findByAuthorAndTitle(author, title);
+
+       if(bookOptional.isPresent()){
+           throw new LibraryMgmtException("Book with the same title and author already exist");
+       }
+
+
+       //this is used to save the book to the db
        Book savedBook =  bookRepository.save(book);
+
+
        if(savedBook == null){
            throw new LibraryMgmtException("Failed to add the book");
        }
