@@ -15,11 +15,28 @@ public class BookLoan {
     // We store IDs as references
     private String bookId;
     private String memberId;
+    private String memberName;
 
     private LocalDate issueDate = LocalDate.now();
-    private LocalDate dueDate;
     private LocalDate returnDate; // Null if not yet returned
 
+    private float fineAmount = 0.0f;
+
+    public float getFineAmount() {
+        return fineAmount;
+    }
+    public void setFineAmount(float fineAmount) {
+        this.fineAmount = fineAmount;
+    }
+
+    private boolean isReturned = false;
+
+    public boolean isReturned() {
+        return isReturned;
+    }
+    public void setReturned(boolean returned) {
+        isReturned = returned;
+    }
 
     // Standard Getters/Setters
 
@@ -39,13 +56,6 @@ public class BookLoan {
         this.memberId = memberId;
     }
 
-    public LocalDate getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(LocalDate dueDate) {
-        this.dueDate = dueDate;
-    }
 
     public LocalDate getIssueDate() {
         return issueDate;
@@ -69,5 +79,13 @@ public class BookLoan {
 
     public void setBookId(String bookId) {
         this.bookId = bookId;
+    }
+
+    public String getMemberName() {
+        return memberName;
+    }
+
+    public void setMemberName(String memberName) {
+        this.memberName = memberName;
     }
 }

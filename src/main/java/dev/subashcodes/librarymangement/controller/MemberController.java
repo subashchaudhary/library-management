@@ -39,35 +39,76 @@ public class MemberController {
     }
 
     @PutMapping("/update/{memberId}")
-    public String updateMemberInfo(@PathVariable("memberId") String memberId, @RequestBody Member updatedMember) {
+    public Response updateMemberInfo(@PathVariable("memberId") String memberId, @RequestBody Member updatedMember) {
 
+        Response response = new Response();
+        try {
+            Member updatedInfo = memberService.updateMemberInfo(memberId, updatedMember);
+            response.setStatus("Success");
+            response.setMessage( "Member info updated successfully for memberId: " + memberId);
+            response.setData(updatedInfo);
+        } catch (LibraryMgmtException e) {
+            String errorMessage =  "Failed to update member info: " + e.getMessage();
+            response.setStatus("Failure");
+            response.setMessage(errorMessage);
+        }
 
-        return "Member info updated successfully for memberId: " + memberId;
+        return response;
+
     }
 
 
     @GetMapping("/{memberId}")
-    public Member getMemberInfo(@PathVariable("memberId") String memberId) {
+    public Response getMemberInfo(@PathVariable("memberId") String memberId) {
 
+        Response response = new Response();
         try {
-            return memberService.getMemberInfo(memberId);
+            Member memberObj =  memberService.getMemberInfo(memberId);
+            response.setMessage("Member Found Successfully");
+            response.setStatus("Success");
+            response.setData(memberObj);
         } catch (LibraryMgmtException e) {
-            return  null;
+
+           String errorMessage =  e.getMessage();
+           response.setMessage(errorMessage);
+           response.setStatus("Failure");
 
         }
+
+        return response;
 
     }
 
     @GetMapping("/all")
-    public List<Member> getAllMembers() {
+    public Response getAllMembers() {
+        Response response = new Response();
+        try {
+            List<Member> memberList =  memberService.getAllMembers();
+            response.setStatus("Success");
+            response.setMessage("Members fetched successfully");
+            response.setData(memberList);
+        }catch (LibraryMgmtException ex){
+            String errorMessage = ex.getMessage();
+            response.setStatus("Failure");
+            response.setMessage("No members found: " + errorMessage);
+        }
 
-        return null;
+        return response;
     }
 
     @DeleteMapping("/delete/{memberId}")
-    public String deleteMember(@PathVariable("memberId") String memberId) {
-
-        return "Member deleted successfully with memberId: " + memberId;
+    public Response deleteMember(@PathVariable("memberId") String memberId) {
+        Response response = new Response();
+        try {
+            memberService.deleteMember(memberId);
+            response.setStatus("Success");
+            response.setMessage("Member deleted successfully with memberId: " + memberId);
+        }catch (LibraryMgmtException ex) {
+            String errorMessage = ex.getMessage();
+            response.setStatus("Failure");
+            response.setMessage("Failed to delete member: " + errorMessage);
+        }
+        return response;
     }
 }
 

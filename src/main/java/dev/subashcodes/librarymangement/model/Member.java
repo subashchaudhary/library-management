@@ -13,7 +13,7 @@ public class Member {
     private String memberId = UUID.randomUUID().toString();
     private String firstName;
     private String lastName;
-    private String addrss;
+    private String address;
     private String email;
     private String phoneNumber;
     private LocalDate membershipDate;
@@ -85,12 +85,12 @@ public class Member {
         this.email = email;
     }
 
-    public String getAddrss() {
-        return addrss;
+    public String getAddress() {
+        return address;
     }
 
-    public void setAddrss(String addrss) {
-        this.addrss = addrss;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getMemberId() {
