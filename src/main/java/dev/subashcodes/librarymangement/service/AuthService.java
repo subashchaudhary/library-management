@@ -1,5 +1,6 @@
 package dev.subashcodes.librarymangement.service;
 
+import dev.subashcodes.librarymangement.exception.LibraryMgmtException;
 import dev.subashcodes.librarymangement.model.User;
 import dev.subashcodes.librarymangement.pojo.SingupRequest;
 import dev.subashcodes.librarymangement.repository.UserRepository;
@@ -13,21 +14,21 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean login(String username, String password){
+    public User login(String username, String password){
 
         //validate the request
         if(username == null || password == null){
-            return false;
+            return null;
         }
        User user = userRepository.findByUsernameAndPassword(username, password);
         if(user == null){
-            return false;
+            return null;
         }
-        return true;
+        return user;
     }
 
 
-    public boolean signup(SingupRequest singupRequest){
+    public User signup(SingupRequest singupRequest) throws LibraryMgmtException{
 
         String email = singupRequest.getEmail();
         String password = singupRequest.getPassword();
@@ -40,15 +41,18 @@ public class AuthService {
         user.setPassword(password);
         user.setPhone(phone);
         user.setUsername(username);
+        //This is used to generate a unique secret code for the user
+        String secretCode = "LIB-" + System.currentTimeMillis();
+        user.setSecretCode(secretCode);
 
         //this will save the user to the database if saved it will return the saved user object else if not saved
         //it will return null
         User savedUser = userRepository.save(user);
         if(savedUser == null){
-            return false;
+            throw new LibraryMgmtException("Failed to signup user");
         }
 
-        return true;
+        return savedUser;
 
     }
 }

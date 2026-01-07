@@ -6,6 +6,7 @@ import dev.subashcodes.librarymangement.model.Book;
 import dev.subashcodes.librarymangement.model.BookLoan;
 import dev.subashcodes.librarymangement.model.Member;
 import dev.subashcodes.librarymangement.repository.BookIssueRepository;
+import dev.subashcodes.librarymangement.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,14 +25,19 @@ public class BookIssueService {
     @Autowired
     private BookIssueRepository bookIssueRepository;
 
+    @Autowired
+    private UserValidator userValidator;
 
 
-    public BookLoan issueBook(String bookId, String memberId) throws LibraryMgmtException{
+    public BookLoan issueBook(String bookId, String memberId, String user, String secretCode) throws LibraryMgmtException{
 
         //step 1: check if book is exist and available
 
         try {
-          Book book =  bookService.getBookById(bookId);
+
+            userValidator.checkValidUserAndSecret(user, secretCode);
+
+          Book book =  bookService.getBookById(bookId, user, secretCode); // will throw exception if book not found
           if(book == null){
                 throw new LibraryMgmtException("Book not found with id: " + bookId);
           }
@@ -42,7 +48,7 @@ public class BookIssueService {
             }
 
           // step 3: check if the member is eligible to issue the book
-           Member member = memberService.getMemberInfo(memberId); // will throw exception if member not found
+           Member member = memberService.getMemberInfo(memberId, user, secretCode); // will throw exception if member not found
               if(member == null){
                 throw new LibraryMgmtException("Member not found with id: " + memberId);
               }
@@ -70,7 +76,7 @@ public class BookIssueService {
 
 
             book.setAvailable(false);
-            bookService.updateBook(bookId, book);
+            bookService.updateBook(bookId, book, user, secretCode);
 
 
             return bookLoan;
@@ -82,7 +88,7 @@ public class BookIssueService {
 
     }
 
-    public BookLoan returnBook(String bookId, String memberId) throws LibraryMgmtException {
+    public BookLoan returnBook(String bookId, String memberId, String user, String secretCode) throws LibraryMgmtException {
         //step 1: find the book issue record
         BookLoan bookLoan = bookIssueRepository.findByBookIdAndMemberId(bookId, memberId);
         if(bookLoan == null){
@@ -110,9 +116,9 @@ public class BookIssueService {
 
         //step 3: mark the book as available
         try {
-            Book book = bookService.getBookById(bookId);
+            Book book = bookService.getBookById(bookId, user, secretCode);
             book.setAvailable(true);
-            bookService.updateBook(bookId, book);
+            bookService.updateBook(bookId, book, user, secretCode);
         } catch (DataNotFoundException e) {
             throw new LibraryMgmtException("Failed to update book availability: " + e.getMessage());
         }

@@ -19,7 +19,7 @@ public class MemberServiceImpl implements MemberService{
 
 
     @Override
-    public Member addNewMember(Member member) throws LibraryMgmtException {
+    public Member addNewMember(Member member, String user, String secretCode) throws LibraryMgmtException {
 
         member.setMembershipDate(LocalDate.now());
         member.setActive(true);
@@ -32,10 +32,10 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Member updateMemberInfo(String memberId, Member updatedMember) throws LibraryMgmtException {
+    public Member updateMemberInfo(String memberId, Member updatedMember,  String user, String secretCode) throws LibraryMgmtException {
 
         //check if member exists
-       Member memberExist =  getMemberInfo(memberId);
+       Member memberExist =  getMemberInfo(memberId, user, secretCode);
 
        if(memberExist == null){
            throw new LibraryMgmtException("Member not found with id: " + memberId);
@@ -45,18 +45,18 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Member getMemberInfo(String memberId) throws LibraryMgmtException {
+    public Member getMemberInfo(String memberId,  String user, String secretCode) throws LibraryMgmtException {
 
         return memberRepository.findById(memberId).orElse(null);
     }
 
     @Override
-    public List<Member> getAllMembers() throws LibraryMgmtException {
+    public List<Member> getAllMembers( String user, String secretCode) throws LibraryMgmtException {
         return memberRepository.findAll();
     }
 
     @Override
-    public void deleteMember(String memberId) throws LibraryMgmtException {
+    public void deleteMember(String memberId,  String user, String secretCode) throws LibraryMgmtException {
 
         memberRepository.deleteById(memberId);
     }

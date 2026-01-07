@@ -6,6 +6,7 @@ import dev.subashcodes.librarymangement.model.Member;
 import dev.subashcodes.librarymangement.pojo.Response;
 import dev.subashcodes.librarymangement.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,12 +19,14 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/add")
-    public Response addNewMember(@RequestBody Member member) {
+    public Response addNewMember(@RequestBody Member member, @RequestHeader HttpHeaders httpHeaders) {
 
+        String user = httpHeaders.getFirst("User");
+        String secretCode = httpHeaders.getFirst("SecretCode");
         Response response = new Response();
 
         try{
-         Member savedMember = memberService.addNewMember(member);
+         Member savedMember = memberService.addNewMember(member, user, secretCode);
          response.setStatus("Success");
          response.setMessage("New member added successfully");
          response.setData(savedMember);
@@ -39,11 +42,13 @@ public class MemberController {
     }
 
     @PutMapping("/update/{memberId}")
-    public Response updateMemberInfo(@PathVariable("memberId") String memberId, @RequestBody Member updatedMember) {
+    public Response updateMemberInfo(@PathVariable("memberId") String memberId, @RequestBody Member updatedMember, @RequestHeader HttpHeaders httpHeaders) {
 
+        String user = httpHeaders.getFirst("User");
+        String secretCode = httpHeaders.getFirst("SecretCode");
         Response response = new Response();
         try {
-            Member updatedInfo = memberService.updateMemberInfo(memberId, updatedMember);
+            Member updatedInfo = memberService.updateMemberInfo(memberId, updatedMember, user, secretCode);
             response.setStatus("Success");
             response.setMessage( "Member info updated successfully for memberId: " + memberId);
             response.setData(updatedInfo);
@@ -59,11 +64,12 @@ public class MemberController {
 
 
     @GetMapping("/{memberId}")
-    public Response getMemberInfo(@PathVariable("memberId") String memberId) {
-
+    public Response getMemberInfo(@PathVariable("memberId") String memberId, @RequestHeader HttpHeaders httpHeaders) {
+        String user = httpHeaders.getFirst("User");
+        String secretCode = httpHeaders.getFirst("SecretCode");
         Response response = new Response();
         try {
-            Member memberObj =  memberService.getMemberInfo(memberId);
+            Member memberObj =  memberService.getMemberInfo(memberId, user, secretCode);
             response.setMessage("Member Found Successfully");
             response.setStatus("Success");
             response.setData(memberObj);
@@ -80,10 +86,12 @@ public class MemberController {
     }
 
     @GetMapping("/all")
-    public Response getAllMembers() {
+    public Response getAllMembers(@RequestHeader HttpHeaders httpHeaders) {
+        String user = httpHeaders.getFirst("User");
+        String secretCode = httpHeaders.getFirst("SecretCode");
         Response response = new Response();
         try {
-            List<Member> memberList =  memberService.getAllMembers();
+            List<Member> memberList =  memberService.getAllMembers(user, secretCode);
             response.setStatus("Success");
             response.setMessage("Members fetched successfully");
             response.setData(memberList);
@@ -97,10 +105,12 @@ public class MemberController {
     }
 
     @DeleteMapping("/delete/{memberId}")
-    public Response deleteMember(@PathVariable("memberId") String memberId) {
+    public Response deleteMember(@PathVariable("memberId") String memberId, @RequestHeader HttpHeaders httpHeaders) {
+        String user = httpHeaders.getFirst("User");
+        String secretCode = httpHeaders.getFirst("SecretCode");
         Response response = new Response();
         try {
-            memberService.deleteMember(memberId);
+            memberService.deleteMember(memberId, user, secretCode);
             response.setStatus("Success");
             response.setMessage("Member deleted successfully with memberId: " + memberId);
         }catch (LibraryMgmtException ex) {

@@ -18,6 +18,15 @@ public class User {
     private String password;
     private String email;
     private String phone;
+    private String secretCode;
+
+    public String getSecretCode() {
+        return secretCode;
+    }
+
+    public void setSecretCode(String secretCode) {
+        this.secretCode = secretCode;
+    }
 
     public String getUsername() {
         return username;
@@ -49,5 +58,13 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

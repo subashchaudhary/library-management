@@ -1,7 +1,10 @@
 package dev.subashcodes.librarymangement.controller;
 
 import dev.subashcodes.librarymangement.exception.LibraryMgmtException;
+import dev.subashcodes.librarymangement.model.User;
 import dev.subashcodes.librarymangement.pojo.LoginRequest;
+import dev.subashcodes.librarymangement.pojo.Response;
+import dev.subashcodes.librarymangement.pojo.SignupResponse;
 import dev.subashcodes.librarymangement.pojo.SingupRequest;
 import dev.subashcodes.librarymangement.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,40 +27,63 @@ public class AuthController {
      */
     @PostMapping("/login") // Mapping HTTP POST requests to /login
     @ResponseBody // To indicate that the return value should be bound to the web response body
-    public String login(@RequestBody LoginRequest loginRequest, @RequestHeader HttpHeaders httpHeaders){
+    public Response login(@RequestBody LoginRequest loginRequest, @RequestHeader HttpHeaders httpHeaders){
+
+        Response response = new Response();
 
        System.out.println("Incomming Request With Unique Id : "+ httpHeaders.getFirst("RequestId"));
 
        //validate the login request
         if(loginRequest.getUsername() == null || loginRequest.getPassword() == null){
-            return "Username or Password cannot be null";
+            response.setStatus("Failure");
+            response.setMessage("Username or Password cannot be null");
         }
 
-       boolean isLoginSuccess =  authService.login(loginRequest.getUsername(), loginRequest.getPassword());
-       if(isLoginSuccess){
-           return "Successfully login";
+       User user =  authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+       if(user != null){
+           String message =  "Successfully login";
+           response.setStatus("Success");
+           response.setMessage(message);
+           response.setData(user);
        }
-       return "Invalid Username or Password";
+       return response;
 
     }
 
 
 
     @PostMapping("/signup")
-    public String sinup(@RequestBody SingupRequest singupRequest){
+    public Response sinup(@RequestBody SingupRequest singupRequest){
         System.out.println("Signup Request Received for username: " + singupRequest.getUsername());
 
+        Response response = new Response();
         //validate the input data
 
         try {
             validateSignupRequest(singupRequest);
+
+
+            User user = authService.signup(singupRequest);
+
+            response.setStatus("Success");
+            response.setMessage("Successfully signed up");
+            SignupResponse signupResponse = new SignupResponse();
+            signupResponse.setPassword(user.getPassword());
+            signupResponse.setUsername(user.getUsername());
+            signupResponse.setUserId(user.getId());
+            signupResponse.setSecretCode(user.getSecretCode());
+
+            response.setData(signupResponse);
+
         }catch (LibraryMgmtException libraryMgmtException){
 
-            return "Signup failed: " + libraryMgmtException.getMessage();
+            response.setStatus("Failure");
+            String message =  "Signup failed: " + libraryMgmtException.getMessage();
+            response.setMessage(message);
         }
 
-        boolean isTrue = authService.signup(singupRequest);
-        return isTrue ? "signup successful" : "signup failed";
+        return response;
+
     }
 
     private void validateSignupRequest(SingupRequest singupRequest) throws LibraryMgmtException{

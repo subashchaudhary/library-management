@@ -8,15 +8,15 @@ import java.util.List;
 public interface MemberService {
 
 
-    public Member addNewMember(Member member)  throws LibraryMgmtException;
+    public Member addNewMember(Member member, String user, String secretCode)  throws LibraryMgmtException;
 
-    public Member updateMemberInfo(String memberId, Member updatedMember) throws LibraryMgmtException;
+    public Member updateMemberInfo(String memberId, Member updatedMember, String user, String secretCode) throws LibraryMgmtException;
 
-    public Member getMemberInfo(String memberId) throws LibraryMgmtException;
+    public Member getMemberInfo(String memberId, String user, String secretCode) throws LibraryMgmtException;
 
-    public List<Member> getAllMembers() throws LibraryMgmtException;
+    public List<Member> getAllMembers(String user, String secretCode) throws LibraryMgmtException;
 
-    public void deleteMember(String memberId) throws LibraryMgmtException;
+    public void deleteMember(String memberId, String user, String secretCode) throws LibraryMgmtException;
 
 
 

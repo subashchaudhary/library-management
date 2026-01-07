@@ -2,15 +2,15 @@ package dev.subashcodes.librarymangement.controller;
 
 
 import dev.subashcodes.librarymangement.exception.LibraryMgmtException;
-import dev.subashcodes.librarymangement.model.Book;
 import dev.subashcodes.librarymangement.model.BookLoan;
 import dev.subashcodes.librarymangement.pojo.IssueBookRequest;
 import dev.subashcodes.librarymangement.pojo.Response;
 import dev.subashcodes.librarymangement.service.BookIssueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -27,12 +27,14 @@ public class BookIssueController {
     private BookIssueService bookIssueService;
 
     @PostMapping("/issueBook")
-    public Response issueBookToMember(@RequestBody IssueBookRequest issueBookRequest) {
+    public Response issueBookToMember(@RequestBody IssueBookRequest issueBookRequest, @RequestHeader HttpHeaders httpHeaders) {
 
+        String user = httpHeaders.getFirst("User");
+        String secretCode = httpHeaders.getFirst("SecretCode");
         System.out.println("Incomming Request to Issue new Book");
         Response response = new Response();
         try{
-           BookLoan bookLoan =  bookIssueService.issueBook(issueBookRequest.getBookId(), issueBookRequest.getMemberId());
+           BookLoan bookLoan =  bookIssueService.issueBook(issueBookRequest.getBookId(), issueBookRequest.getMemberId(), user, secretCode);
             response.setStatus("Success");
             response.setMessage("Book issued successfully to memberId: " + issueBookRequest.getMemberId());
             response.setData(bookLoan);
@@ -47,11 +49,13 @@ public class BookIssueController {
 
 
     @PostMapping("/returnBook")
-    public Response returnBook(@RequestBody IssueBookRequest issueBookRequest) {
+    public Response returnBook(@RequestBody IssueBookRequest issueBookRequest, @RequestHeader HttpHeaders httpHeaders) {
 
+        String user = httpHeaders.getFirst("User");
+        String secretCode = httpHeaders.getFirst("SecretCode");
         Response response = new Response();
         try{
-            BookLoan book =  bookIssueService.returnBook(issueBookRequest.getBookId(), issueBookRequest.getMemberId());
+            BookLoan book =  bookIssueService.returnBook(issueBookRequest.getBookId(), issueBookRequest.getMemberId(), user, secretCode);
             response.setStatus("Success");
             response.setMessage("Book returned successfully for memberId: " + issueBookRequest.getMemberId());
             response.setData(book);
