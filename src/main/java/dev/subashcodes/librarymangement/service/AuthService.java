@@ -5,6 +5,7 @@ import dev.subashcodes.librarymangement.model.User;
 import dev.subashcodes.librarymangement.pojo.SingupRequest;
 import dev.subashcodes.librarymangement.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,6 +14,9 @@ public class AuthService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public User login(String username, String password){
 
@@ -38,7 +42,11 @@ public class AuthService {
         //Entity mapping
         User user = new User();
         user.setEmail(email);
-        user.setPassword(password);
+
+        //encrypt the password before saving to database
+        String encryptedPassword =  passwordEncoder.encode(password);
+        System.out.println(encryptedPassword);
+        user.setPassword(encryptedPassword);
         user.setPhone(phone);
         user.setUsername(username);
         //This is used to generate a unique secret code for the user
