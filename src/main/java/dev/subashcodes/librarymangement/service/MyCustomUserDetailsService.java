@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 
+
+//custom user details service given to spring security to user this for authorization and authentication
 @Component
 public class MyCustomUserDetailsService implements UserDetailsService {
 
@@ -18,7 +20,7 @@ public class MyCustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        //createing our customer user details
+        //creating our customer user details
 
         User user =  userRepository.findByUsername(username);
         MyUserDetails myUserDetails = new MyUserDetails(user);

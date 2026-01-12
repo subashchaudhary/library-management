@@ -24,9 +24,7 @@ public class SpringSecurityConfig {
         http.csrf(c->c.disable()) //csrf disable for postman testing
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/auth/**").permitAll() //permit to all the user
-//                                .requestMatchers("/api/books/**", "/issueBook", "/returBook", "/members/**")
-//                                .requestMatchers("/api/user/getDetails/**").hasAnyRole("USER")
-//                                .requestMatchers("/api/librarian/**").hasAnyRole("LIBRARIAN")
+                                 .requestMatchers("/api/books/**", "/issueBook", "/returBook", "/members/**").hasAuthority("ADMIN") //only librarian and admin can access book and member related api
                         .anyRequest().authenticated() //remaining all request should be authenticated
                 ) .httpBasic(Customizer.withDefaults()) //
                 .formLogin(Customizer.withDefaults());
