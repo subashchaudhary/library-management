@@ -7,9 +7,13 @@ import dev.subashcodes.librarymangement.pojo.Response;
 import dev.subashcodes.librarymangement.pojo.SignupResponse;
 import dev.subashcodes.librarymangement.pojo.SingupRequest;
 import dev.subashcodes.librarymangement.service.AuthService;
+import dev.subashcodes.librarymangement.util.JWTUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping("/auth")
 @RestController
@@ -17,6 +21,9 @@ public class AuthController {
 
     @Autowired
     private AuthService authService;
+
+    @Autowired
+    private JWTUtility jwtUtility;
 
     /**
      * This is the login api endpoint
@@ -39,13 +46,8 @@ public class AuthController {
             response.setMessage("Username or Password cannot be null");
         }
 
-       User user =  authService.login(loginRequest.getUsername(), loginRequest.getPassword());
-       if(user != null){
-           String message =  "Successfully login";
-           response.setStatus("Success");
-           response.setMessage(message);
-           response.setData(user);
-       }
+       response =  authService.login(loginRequest.getUsername(), loginRequest.getPassword());
+
        return response;
 
     }

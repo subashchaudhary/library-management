@@ -2,11 +2,21 @@ package dev.subashcodes.librarymangement.service;
 
 import dev.subashcodes.librarymangement.exception.LibraryMgmtException;
 import dev.subashcodes.librarymangement.model.User;
+import dev.subashcodes.librarymangement.pojo.Response;
 import dev.subashcodes.librarymangement.pojo.SingupRequest;
 import dev.subashcodes.librarymangement.repository.UserRepository;
+import dev.subashcodes.librarymangement.util.JWTUtility;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class AuthService {
@@ -16,19 +26,34 @@ public class AuthService {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private JWTUtility jwtUtility;
 
-    public User login(String username, String password){
 
-        //validate the request
-        if(username == null || password == null){
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    public Response login(String username, String password){
+
+        Response response = new Response();
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        password
+                )
+        );
+
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        if(userDetails == null) {
             return null;
         }
-       User user = userRepository.findByUsernameAndPassword(username, password);
-        if(user == null){
-            return null;
-        }
-        return user;
+        response.setMessage("Success");
+        response.setMessage("Successfully logged in");
+        String token = jwtUtility.generateToken(userDetails.getUsername());
+        Map<String, String> data = new HashMap<>();
+        data.put("token", token);
+        response.setData(data);
+        return response;
     }
 
 
@@ -44,9 +69,7 @@ public class AuthService {
         user.setEmail(email);
 
         //encrypt the password before saving to database
-        String encryptedPassword =  passwordEncoder.encode(password);
-        System.out.println(encryptedPassword);
-        user.setPassword(encryptedPassword);
+
         user.setPhone(phone);
         user.setUsername(username);
         //This is used to generate a unique secret code for the user
